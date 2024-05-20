@@ -108,8 +108,22 @@
             </div>
 
         </div>
+        <table class="table" style="background-blend-mode: darken;">
+            <thead>
+                <tr>
+                    <th scope="col">Nama Koin</th>
+                    <th scope="col">Harga</th>
+                    <th scope="col">Symbol</th>
+                    <th scope="col">Market Cap</th>
+                </tr>
+            </thead>
+            <tbody id="value">
+
+            </tbody>
+        </table>
     </div>
     <!-- TradingView Widget END -->
+
 
 
 
@@ -122,138 +136,47 @@
             "X-CMC_PRO_API_KEY": "a0540c63-5884-417a-8c31-4a8fcea92213",
             Accept: "application/json"
         }
-        fetch("https://pro-api.coinmarketcap.com/v1/cryptocurrency/map", {
+        const parameter = new URLSearchParams({
+            "convert": "IDR",
+        });
+
+        fetch("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?" + parameter.toString(), {
             method: 'GET',
             headers: header
         }).then(response =>
             response.json()
-        ).then(response =>
+        ).then(response => {
             console.log(response)
-        )
-        for (let index = 0; index < data.data.length; index++) {
-            var checkbox = document.createElement("input");
-            checkbox.id = "checkbox-table-search-1";
-            checkbox.type = "checkbox";
-            checkbox.className = "w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-600 ring-offset-gray-800 focus:ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600";
+            for (let index = 0; index < 30; index++) {
+                // Create the table row element
+                const tr = document.createElement('tr');
 
-            var label = document.createElement("label");
-            label.htmlFor = "checkbox-table-search-1";
-            label.className = "sr-only";
-            label.textContent = "checkbox";
+                // Create the 'th' element and set its attributes and content
+                const th = document.createElement('th');
+                th.setAttribute('scope', 'row');
+                th.textContent = response.data[index].name;
 
-            var div = document.createElement("div");
-            div.className = "flex items-center";
-            div.appendChild(checkbox);
-            div.appendChild(label);
+                // Create the 'td' elements and set their content
+                const td1 = document.createElement('td');
+                td1.textContent = response.data[index].quote.IDR.price.toLocaleString('id-ID');
 
-            var td = document.createElement("td");
-            td.className = "w-4 p-4";
-            td.appendChild(div);
+                const td2 = document.createElement('td');
+                td2.textContent = response.data[index].symbol;
 
-            var th = document.createElement("th");
-            th.scope = "row";
-            th.className = "px-6 py-4";
-            th.textContent = data.data[index].name;
+                const td3 = document.createElement('td');
+                td3.textContent = response.data[index].quote.IDR.market_cap;
 
-            var td1 = document.createElement("td");
-            td1.className = "px-6 py-4";
-            td1.textContent = "Rp." + parseFloat(data.data[index].quote.IDR.price).toLocaleString('id-ID');
+                // Append 'th' and 'td' elements to the 'tr' element
+                tr.appendChild(th);
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tr.appendChild(td3);
 
-            var td2 = document.createElement("td");
-            if (parseFloat(data.data[index].quote.IDR.percent_change_1h) > 0.0) {
-                td2.className = "px-6 py-4 text-green-800";
-            } else {
-                td2.className = "px-6 py-4 text-red-800"
-            };
-            td2.textContent = data.data[index].quote.IDR.percent_change_1h + '%';
-
-            var td3 = document.createElement("td");
-            td3.className = "px-6 py-4";
-            td3.textContent = data.data[index].quote.IDR.percent_change_24h + '%';
-
-            var td4 = document.createElement("td");
-            td4.className = "px-6 py-4";
-            td4.textContent = data.data[index].quote.IDR.percent_change_7d + '%';
-
-            var td5 = document.createElement("td");
-            td5.className = "px-6 py-4";
-            td5.textContent = "Rp." + parseFloat(data.data[index].quote.IDR.market_cap).toLocaleString('id-ID');
-
-            var td6 = document.createElement("td");
-            td6.className = "px-6 py-4";
-            td6.textContent = data.data[index].circulating_supply;
-
-            var td7 = document.createElement("td");
-            td7.className = "px-6 py-4";
-
-            var td7 = document.createElement("td");
-            td7.className = "px-6 py-4";
-
-            // var tradingviewContainer = document.createElement("div");
-            // tradingviewContainer.className = "tradingview-widget-container";
-            // tradingviewContainer.style.height = "100%";
-            // tradingviewContainer.style.width = "100%";
-
-            // var tradingviewWidget = document.createElement("div");
-            // tradingviewWidget.className = "tradingview-widget-container__widget";
-            // tradingviewWidget.style.height = "calc(100% - 32px)";
-            // tradingviewWidget.style.width = "100%";
-
-            // var tradingviewCopyright = document.createElement("div");
-            // var tradingviewLink = document.createElement("a");
-            // tradingviewLink.href = "https://www.tradingview.com/";
-            // tradingviewLink.rel = "noopener nofollow";
-            // tradingviewLink.target = "_blank";
-            // var tradingviewSpan = document.createElement("span");
-            // tradingviewSpan.className = "blue-text";
-            // tradingviewSpan.textContent = "Track all markets on TradingView";
-            // tradingviewLink.appendChild(tradingviewSpan);
-            // tradingviewCopyright.appendChild(tradingviewLink);
-
-            // var tradingviewScript = document.createElement("script");
-            // tradingviewScript.type = "text/javascript";
-            // tradingviewScript.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
-            // tradingviewScript.async = true;
-            // tradingviewScript.innerHTML = `{
-            //         "autosize": true,
-            //         "symbol": "CRYPTOCAP:${data.data[index].symbol}",
-            //         "interval": "D",
-            //         "timezone": "Etc/UTC",
-            //         "theme": "dark",
-            //         "style": "2",
-            //         "locale": "en",
-            //         "hide_top_toolbar": true,
-            //         "hide_legend": true,
-            //         "allow_symbol_change": false,
-            //         "save_image": false,
-            //         "calendar": false,
-            //         "hide_volume": true,
-            //         "support_host": "https://www.tradingview.com"
-            //     }`;
-
-            // td7.appendChild(tradingviewContainer);
-            // tradingviewContainer.appendChild(tradingviewWidget);
-            // tradingviewContainer.appendChild(tradingviewCopyright);
-            // tradingviewContainer.appendChild(tradingviewScript);
+                document.getElementById("value").appendChild(tr);
 
 
-            var tr = document.createElement("tr");
-            tr.className = "border-b bg-gray-800 border-gray-700 hover:bg-gray-50 hover:bg-gray-600";
-            tr.appendChild(td);
-            tr.appendChild(th);
-            tr.appendChild(td1);
-            tr.appendChild(td2);
-            tr.appendChild(td3);
-            tr.appendChild(td4);
-            tr.appendChild(td5);
-            tr.appendChild(td6);
-            tr.appendChild(td7);
-
-            var table = document.getElementById("allDataTable");
-            table.appendChild(tr);
-
-        }
-
+            }
+        })
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
     </script>
