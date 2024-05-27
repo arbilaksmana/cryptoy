@@ -15,15 +15,45 @@
 </head>
 
 <body>
-    <nav class="navbar bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark" data-bs-theme="dark">
         <div class="container-fluid container">
-            <a class="navbar-brand" style="font-weight: 900;">Criptoy</a>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+            <a class="navbar-brand fw-bold" href="index.php">Criptoy</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Dropdown
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                    </li> -->
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
         </div>
     </nav>
+
 
     <div class="container p-4">
         <h2 class="mb-4" style="color: white;">Welcome Capt</h2>
@@ -108,7 +138,7 @@
             </div>
 
         </div>
-        <table class="table" style="background-blend-mode: darken;">
+        <table class="table table-striped table-dark" style="background-blend-mode: darken;background-color:black;">
             <thead>
                 <tr>
                     <th scope="col">Nama Koin</th>
@@ -120,6 +150,12 @@
             <tbody id="value">
 
             </tbody>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item"><button class="page-link" onclick="previouspage()">Previous</button></li>
+                    <li class="page-item"><button class="page-link" onclick="nextpage()">Next</button></li>
+                </ul>
+            </nav>
         </table>
     </div>
     <!-- TradingView Widget END -->
@@ -132,6 +168,35 @@
 
 
     <script>
+        function previouspage(){
+            const param = new URLSearchParams(
+                window.location.search
+
+            );
+            const page = param.get("page")
+            const prevpage = (parseInt(page  ?? 1)) - 1
+            const newparam = new URLSearchParams({
+                "page":prevpage
+            })
+
+            window.location.href = "index.php?"+newparam.toString()
+        }
+
+        function nextpage(){
+            const param = new URLSearchParams(
+                window.location.search
+
+            );
+            const page = param.get("page")
+            const nextpage = (parseInt(page  ?? 1)) +1
+            const newparam = new URLSearchParams({
+                "page":nextpage
+            })
+
+            window.location.href = "index.php?"+newparam.toString()
+        }
+
+
         const header = {
             "X-CMC_PRO_API_KEY": "a0540c63-5884-417a-8c31-4a8fcea92213",
             Accept: "application/json"
@@ -147,9 +212,12 @@
             response.json()
         ).then(response => {
             console.log(response)
-            for (let index = 0; index < 30; index++) {
+            for (let index = 0; index < response.data.length; index++) {
                 // Create the table row element
                 const tr = document.createElement('tr');
+                tr.onclick = function() {
+                    changePage(response.data[index].id, response.data[index].symbol)
+                };
 
                 // Create the 'th' element and set its attributes and content
                 const th = document.createElement('th');
@@ -177,6 +245,14 @@
 
             }
         })
+
+        function changePage(id, symbol) {
+            const param = new URLSearchParams({
+                "id": id,
+                "symbol": symbol
+            });
+            window.location.href = "detailKoin.php?" + param.toString();
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
     </script>
