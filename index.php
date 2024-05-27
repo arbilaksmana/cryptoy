@@ -145,6 +145,7 @@
                     <th scope="col">Harga</th>
                     <th scope="col">Symbol</th>
                     <th scope="col">Market Cap</th>
+                    <th scope="col">Chart</th>
                 </tr>
             </thead>
             <tbody id="value">
@@ -168,32 +169,32 @@
 
 
     <script>
-        function previouspage(){
+        function previouspage() {
             const param = new URLSearchParams(
                 window.location.search
 
             );
             const page = param.get("page")
-            const prevpage = (parseInt(page  ?? 1)) - 1
+            const prevpage = (parseInt(page ?? 1)) - 1
             const newparam = new URLSearchParams({
-                "page":prevpage
+                "page": prevpage
             })
 
-            window.location.href = "index.php?"+newparam.toString()
+            window.location.href = "index.php?" + newparam.toString()
         }
 
-        function nextpage(){
+        function nextpage() {
             const param = new URLSearchParams(
                 window.location.search
 
             );
             const page = param.get("page")
-            const nextpage = (parseInt(page  ?? 1)) +1
+            const nextpage = (parseInt(page ?? 1)) + 1
             const newparam = new URLSearchParams({
-                "page":nextpage
+                "page": nextpage
             })
 
-            window.location.href = "index.php?"+newparam.toString()
+            window.location.href = "index.php?" + newparam.toString()
         }
 
 
@@ -234,11 +235,41 @@
                 const td3 = document.createElement('td');
                 td3.textContent = response.data[index].quote.IDR.market_cap;
 
+                const td4 = document.createElement("td");
+                td4.className = "px-4";
+
+                const divTradingView = document.createElement("div");
+                divTradingView.className = "tradingview-widget-container";
+                const divWidget = document.createElement("div");
+                divWidget.className = "tradingview-widget-container__widget";
+                divTradingView.appendChild(divWidget);
+                const script = document.createElement("script");
+                script.type = "text/javascript";
+                script.src = "https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js";
+                script.async = true;
+                script.textContent = `{
+                "symbol": "CRYPTOCAP:${response.data[index].symbol}",
+                "width": "100%",
+                "height": "50%",
+                "locale": "en",
+                "dateRange": "1M",
+                "colorTheme": "dark",
+                "isTransparent": false,
+                "autosize": false,
+                "largeChartUrl": "",
+                "chartOnly": true,
+                "noTimeScale": true
+            }`;
+                divTradingView.appendChild(script);
+                td4.appendChild(divTradingView);
+
                 // Append 'th' and 'td' elements to the 'tr' element
                 tr.appendChild(th);
                 tr.appendChild(td1);
                 tr.appendChild(td2);
                 tr.appendChild(td3);
+                tr.appendChild(td4);
+
 
                 document.getElementById("value").appendChild(tr);
 
