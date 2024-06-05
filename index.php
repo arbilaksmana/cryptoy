@@ -16,43 +16,21 @@
 
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark" data-bs-theme="dark">
+        <!-- Membuat elemen navbar dengan kelas CSS dari Bootstrap yang membuat navbar responsif dan berwarna gelap -->
         <div class="container-fluid container">
+            <!-- Membungkus konten navbar dengan kontainer yang melebar secara penuh dan menggunakan kelas container dari Bootstrap -->
             <a class="navbar-brand fw-bold" href="index.php">Criptoy</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <!-- <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
+            <!-- Membuat tautan brand/logo di navbar yang mengarah ke halaman index.php, dengan teks tebal -->
+            <div class="d-flex" id="navbarNav">
+                <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
+                        <a class="nav-link active p-0" aria-current="page" href="tambahkoin.php"><button type="button" class="btn p-0">Portfolio</button></a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                    </li> -->
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
             </div>
         </div>
     </nav>
+
 
 
     <div class="container p-4">
@@ -163,91 +141,105 @@
 
 
 
-
-
-
-
-
     <script>
         function previouspage() {
             const param = new URLSearchParams(
                 window.location.search
-
             );
+            // Mendapatkan parameter URL saat ini
             const page = param.get("page")
+            // Mendapatkan nilai parameter 'page', jika tidak ada, nilai default adalah 1
             const prevpage = (parseInt(page ?? 1)) - 1
+            // Mengurangi nilai halaman dengan 1
             const newparam = new URLSearchParams({
                 "page": prevpage
             })
-
+            // Membuat parameter URL baru dengan halaman yang dikurangi
             window.location.href = "index.php?" + newparam.toString()
+            // Mengarahkan browser ke halaman sebelumnya dengan parameter URL baru
         }
 
         function nextpage() {
             const param = new URLSearchParams(
                 window.location.search
-
             );
+            // Mendapatkan parameter URL saat ini
             const page = param.get("page")
+            // Mendapatkan nilai parameter 'page', jika tidak ada, nilai default adalah 1
             const nextpage = (parseInt(page ?? 1)) + 1
+            // Menambah nilai halaman dengan 1
             const newparam = new URLSearchParams({
                 "page": nextpage
             })
-
+            // Membuat parameter URL baru dengan halaman yang ditambah
             window.location.href = "index.php?" + newparam.toString()
+            // Mengarahkan browser ke halaman berikutnya dengan parameter URL baru
         }
-
 
         const header = {
             "X-CMC_PRO_API_KEY": "a0540c63-5884-417a-8c31-4a8fcea92213",
             Accept: "application/json"
         }
+        // Mendefinisikan header untuk permintaan API termasuk API key dan tipe konten yang diterima
+
         const parameter = new URLSearchParams({
             "convert": "IDR",
         });
+        // Membuat parameter URL untuk mengkonversi nilai cryptocurrency ke IDR (Rupiah)
 
         fetch("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?" + parameter.toString(), {
-            method: 'GET',
-            headers: header
-        }).then(response =>
-            response.json()
-        ).then(response => {
-            console.log(response)
-            for (let index = 0; index < response.data.length; index++) {
-                // Create the table row element
-                const tr = document.createElement('tr');
-                tr.onclick = function() {
-                    changePage(response.data[index].id, response.data[index].symbol)
-                };
+                method: 'GET',
+                headers: header
+            })
+            // Melakukan permintaan GET ke API CoinMarketCap dengan header dan parameter yang telah ditentukan
+            .then(response =>
+                response.json()
+            )
+            // Mengubah respons menjadi JSON
+            .then(response => {
+                console.log(response)
+                // Menampilkan respons API di konsol
+                for (let index = 0; index < response.data.length; index++) {
+                    // Looping melalui setiap data cryptocurrency yang diterima dari API
+                    const tr = document.createElement('tr');
+                    tr.onclick = function() {
+                        changePage(response.data[index].id, response.data[index].symbol)
+                    };
+                    // Membuat elemen <tr> dan menetapkan event klik untuk mengubah halaman
 
-                // Create the 'th' element and set its attributes and content
-                const th = document.createElement('th');
-                th.setAttribute('scope', 'row');
-                th.textContent = response.data[index].name;
+                    const th = document.createElement('th');
+                    th.setAttribute('scope', 'row');
+                    th.textContent = response.data[index].name;
+                    // Membuat elemen <th> untuk nama cryptocurrency dan menetapkan atribut 'scope'
 
-                // Create the 'td' elements and set their content
-                const td1 = document.createElement('td');
-                td1.textContent = response.data[index].quote.IDR.price.toLocaleString('id-ID');
+                    const td1 = document.createElement('td');
+                    td1.textContent = response.data[index].quote.IDR.price.toLocaleString('id-ID');
+                    // Membuat elemen <td> untuk harga cryptocurrency dalam IDR
 
-                const td2 = document.createElement('td');
-                td2.textContent = response.data[index].symbol;
+                    const td2 = document.createElement('td');
+                    td2.textContent = response.data[index].symbol;
+                    // Membuat elemen <td> untuk simbol cryptocurrency
 
-                const td3 = document.createElement('td');
-                td3.textContent = response.data[index].quote.IDR.market_cap;
+                    const td3 = document.createElement('td');
+                    td3.textContent = response.data[index].quote.IDR.market_cap;
+                    // Membuat elemen <td> untuk kapitalisasi pasar cryptocurrency dalam IDR
 
-                const td4 = document.createElement("td");
-                td4.className = "px-4";
+                    const td4 = document.createElement("td");
+                    td4.className = "px-4";
+                    // Membuat elemen <td> tambahan untuk widget TradingView
 
-                const divTradingView = document.createElement("div");
-                divTradingView.className = "tradingview-widget-container";
-                const divWidget = document.createElement("div");
-                divWidget.className = "tradingview-widget-container__widget";
-                divTradingView.appendChild(divWidget);
-                const script = document.createElement("script");
-                script.type = "text/javascript";
-                script.src = "https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js";
-                script.async = true;
-                script.textContent = `{
+                    const divTradingView = document.createElement("div");
+                    divTradingView.className = "tradingview-widget-container";
+                    const divWidget = document.createElement("div");
+                    divWidget.className = "tradingview-widget-container__widget";
+                    divTradingView.appendChild(divWidget);
+                    // Membuat elemen div untuk widget TradingView dan menetapkan kelas CSS
+
+                    const script = document.createElement("script");
+                    script.type = "text/javascript";
+                    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js";
+                    script.async = true;
+                    script.textContent = `{
                 "symbol": "CRYPTOCAP:${response.data[index].symbol}",
                 "width": "100%",
                 "height": "50%",
@@ -260,22 +252,21 @@
                 "chartOnly": true,
                 "noTimeScale": true
             }`;
-                divTradingView.appendChild(script);
-                td4.appendChild(divTradingView);
+                    divTradingView.appendChild(script);
+                    td4.appendChild(divTradingView);
+                    // Membuat elemen script untuk widget TradingView dan menambahkannya ke elemen div
 
-                // Append 'th' and 'td' elements to the 'tr' element
-                tr.appendChild(th);
-                tr.appendChild(td1);
-                tr.appendChild(td2);
-                tr.appendChild(td3);
-                tr.appendChild(td4);
+                    tr.appendChild(th);
+                    tr.appendChild(td1);
+                    tr.appendChild(td2);
+                    tr.appendChild(td3);
+                    tr.appendChild(td4);
+                    // Menambahkan elemen <th> dan <td> ke dalam elemen <tr>
 
-
-                document.getElementById("value").appendChild(tr);
-
-
-            }
-        })
+                    document.getElementById("value").appendChild(tr);
+                    // Menambahkan elemen <tr> ke dalam elemen dengan id 'value'
+                }
+            })
 
         function changePage(id, symbol) {
             const param = new URLSearchParams({
@@ -283,8 +274,10 @@
                 "symbol": symbol
             });
             window.location.href = "detailKoin.php?" + param.toString();
+            // Mengubah halaman ke detailKoin.php dengan parameter id dan symbol dari cryptocurrency yang diklik
         }
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">

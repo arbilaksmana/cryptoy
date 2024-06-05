@@ -53,44 +53,19 @@
         </div>
     </nav>
 
-    <!-- TradingView Widget BEGIN -->
-    <!-- <div class="tradingview-widget-container" style="height:100%;width:100%">
-        <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
-        <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-            {
-                "autosize": true,
-                "symbol": "OANDA:XAUUSD",
-                "interval": "D",
-                "timezone": "Etc/UTC",
-                "theme": "dark",
-                "style": "1",
-                "locale": "en",
-                "backgroundColor": "rgba(0, 0, 0, 1)",
-                "gridColor": "rgba(0, 0, 0, 0.06)",
-                "allow_symbol_change": true,
-                "calendar": false,
-                "support_host": "https://www.tradingview.com"
-            }
-        </script>
-    </div> -->
-    <!-- TradingView Widget END -->
-
     <div class="container mt-5">
         <div class="row">
             <div class="col-4">
                 <div class="d-flex flex-row align-items-center">
-                    <img id="logo" class="card-img-top" alt="..." style="width: 10%;">
-                    <p id="name" class="m-0" style="color: white;"></p> &ensp;
-                    <p id="symbolll" class="m-0" style="color: white; opacity: 50%;"></p>  
+                    <img id="logo" class="card-img-top" alt="..." style="width: 10%;"> &ensp;
+                    <p id="name" class="m-0 fw-bold" style="color: white;"></p> &ensp;
+                    <p id="symbolll" class="m-0" style="color: white; opacity: 50%;"></p>
                 </div>
                 <div class="card-body">
                     <p class="card-text"></p>
                     <h1 id="price" style="color: white;"></h1>
                     <div class="d-flex flex-row justify-content-start">
-                        <!-- <p style="color: white;" class="p-0 flex-grow-1"> </p> -->
                         <h6 id="volumechange24h" style="color: white;" class="p-0"></h6>
-                        <!-- <p style="color: white;">&ensp; 24h</p> -->
                     </div>
                     <div class="d-flex flex-row justify-content-end mt-4">
                         <p style="color: white;" class="p-0 flex-grow-1">Market Cap: </p>
@@ -180,11 +155,6 @@
             </script>
         </div>
         <!-- TradingView Widget END -->
-
-
-
-
-
     </div>
 
 
@@ -197,54 +167,83 @@
 
     <script>
         const url = new URLSearchParams(window.location.search)
+        // Mendapatkan parameter URL saat ini
         url.delete("symbol")
+        // Menghapus parameter 'symbol' dari URL
         url.append('convert', 'IDR')
-
+        // Menambahkan parameter 'convert' dengan nilai 'IDR' ke URL
 
         const header = {
             "X-CMC_PRO_API_KEY": "a0540c63-5884-417a-8c31-4a8fcea92213",
             Accept: "application/json"
         }
+        // Mendefinisikan header untuk permintaan API termasuk API key dan tipe konten yang diterima
 
-        fetch("https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?" + url.toString(), {
-            method: 'GET',
-            headers: header
-        }).then(response =>
-            response.json()
-        ).then(response => {
-            console.log(response)
-            document.getElementById("marketcap").innerHTML = response.data[url.get("id")].quote.IDR.market_cap.toLocaleString("id-ID");
-            document.getElementById("price").innerHTML = "IDR " + response.data[url.get("id")].quote.IDR.price.toLocaleString("id-ID");
-            document.getElementById("name").innerHTML = response.data[url.get("id")].name;
-            document.getElementById("volume").innerHTML = response.data[url.get("id")].quote.IDR.volume_24h.toLocaleString("id-ID");
-            document.getElementById("totalsupply").innerHTML = response.data[url.get("id")].total_supply.toLocaleString("id-ID");
-            document.getElementById("maxsupply").innerHTML = response.data[url.get("id")].max_supply.toLocaleString("id-ID");
-            document.getElementById("volumechange24h").innerHTML = response.data[url.get("id")].quote.IDR.volume_change_24h + "%";
-            if (response.data[url.get("id")].quote.IDR.volume_change_24h > 0) {
-                document.getElementById("volumechange24h").className = "text-success"
-            } else {
-                document.getElementById("volumechange24h").className = "text-danger"
-            }
-            document.getElementById("dilutedmarketcap").innerHTML = response.data[url.get("id")].quote.IDR.fully_diluted_market_cap.toLocaleString("id-ID");
-            document.getElementById("circulatingsupply").innerHTML = response.data[url.get("id")].circulating_supply.toLocaleString("id-ID");
-            document.getElementById("symbolll").innerHTML = response.data[url.get("id")].symbol;
-        })
+        fetch("https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?" + url.toString(), { //API quote latest
+                method: 'GET',
+                headers: header
+            })
+            // Melakukan permintaan GET ke API CoinMarketCap untuk mendapatkan data cryptocurrency terbaru
+            .then(response =>
+                response.json()
+            )
+            // Mengubah respons menjadi JSON
+            .then(response => {
+                console.log(response)
+                // Menampilkan respons API di konsol
+                document.getElementById("marketcap").innerHTML = response.data[url.get("id")].quote.IDR.market_cap.toLocaleString("id-ID");
+                // Menampilkan kapitalisasi pasar dalam IDR pada elemen dengan id 'marketcap'
+                document.getElementById("price").innerHTML = "IDR " + response.data[url.get("id")].quote.IDR.price.toLocaleString("id-ID");
+                // Menampilkan harga cryptocurrency dalam IDR pada elemen dengan id 'price'
+                document.getElementById("name").innerHTML = response.data[url.get("id")].name;
+                // Menampilkan nama cryptocurrency pada elemen dengan id 'name'
+                document.getElementById("volume").innerHTML = response.data[url.get("id")].quote.IDR.volume_24h.toLocaleString("id-ID");
+                // Menampilkan volume 24 jam dalam IDR pada elemen dengan id 'volume'
+                document.getElementById("totalsupply").innerHTML = response.data[url.get("id")].total_supply.toLocaleString("id-ID");
+                // Menampilkan total suplai cryptocurrency pada elemen dengan id 'totalsupply'
+                document.getElementById("maxsupply").innerHTML = response.data[url.get("id")].max_supply.toLocaleString("id-ID");
+                // Menampilkan maksimal suplai cryptocurrency pada elemen dengan id 'maxsupply'
+                document.getElementById("volumechange24h").innerHTML = response.data[url.get("id")].quote.IDR.volume_change_24h + "%";
+                // Menampilkan perubahan volume 24 jam dalam persen pada elemen dengan id 'volumechange24h'
+                if (response.data[url.get("id")].quote.IDR.volume_change_24h > 0) {
+                    document.getElementById("volumechange24h").className = "text-success"
+                } else {
+                    document.getElementById("volumechange24h").className = "text-danger"
+                }
+                // Mengubah kelas elemen berdasarkan perubahan volume 24 jam (positif atau negatif)
+                document.getElementById("dilutedmarketcap").innerHTML = response.data[url.get("id")].quote.IDR.fully_diluted_market_cap.toLocaleString("id-ID");
+                // Menampilkan kapitalisasi pasar terdilusi penuh dalam IDR pada elemen dengan id 'dilutedmarketcap'
+                document.getElementById("circulatingsupply").innerHTML = response.data[url.get("id")].circulating_supply.toLocaleString("id-ID");
+                // Menampilkan suplai yang beredar pada elemen dengan id 'circulatingsupply'
+                document.getElementById("symbolll").innerHTML = response.data[url.get("id")].symbol;
+                // Menampilkan simbol cryptocurrency pada elemen dengan id 'symbolll'
+            })
         url.delete("convert")
+        // Menghapus parameter 'convert' dari URL
 
-        fetch("https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?" + url.toString(), {
-            method: 'GET',
-            headers: header
-        }).then(response =>
-            response.json()
-        ).then(response => {
-            console.log(response)
-            document.getElementById("logo").src = response.data[url.get("id")].logo;
-            document.getElementById("discord").href = response.data[url.get("id")].urls.chat;
-            document.getElementById("x").href = response.data[url.get("id")].urls.twitter;
-            document.getElementById("web").href = response.data[url.get("id")].urls.website;
-           
-        })
+        fetch("https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?" + url.toString(), { //API metadata
+                method: 'GET',
+                headers: header
+            })
+            // Melakukan permintaan GET ke API CoinMarketCap untuk mendapatkan informasi tambahan tentang cryptocurrency
+            .then(response =>
+                response.json()
+            )
+            // Mengubah respons menjadi JSON
+            .then(response => {
+                console.log(response)
+                // Menampilkan respons API di konsol
+                document.getElementById("logo").src = response.data[url.get("id")].logo;
+                // Menampilkan logo cryptocurrency pada elemen dengan id 'logo'
+                document.getElementById("discord").href = response.data[url.get("id")].urls.chat;
+                // Menetapkan tautan Discord pada elemen dengan id 'discord'
+                document.getElementById("x").href = response.data[url.get("id")].urls.twitter;
+                // Menetapkan tautan Twitter pada elemen dengan id 'x'
+                document.getElementById("web").href = response.data[url.get("id")].urls.website;
+                // Menetapkan tautan website pada elemen dengan id 'web'
+            })
     </script>
+
 
 
 
