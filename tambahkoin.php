@@ -49,6 +49,7 @@
                         <th>Nama Koin</th>
                         <th>Jumlah Dimiliki</th>
                         <th>Harga Saat Ini (USD)</th>
+                        <th>Aksi</th>
                         <th>Nilai Total (USD)</th>
                     </tr>
                 </thead>
@@ -57,7 +58,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="3" class="text-right">Subtotal:</th>
+                        <th colspan="4" class="text-right">Subtotal:</th>
                         <th id="subtotal-value">0.00</th>
                     </tr>
                 </tfoot>
@@ -122,10 +123,17 @@
                 <td>${symbol.toUpperCase()}</td>
                 <td>${amount}</td>
                 <td>${price.toFixed(2)}</td>
+                <td><button class="btn btn-danger btn-sm delete-coin">Hapus</button></td>
                 <td>${totalValue.toFixed(2)}</td>
             `;
                     portfolioBody.appendChild(row);
                     updateSubtotal(totalValue);
+
+                    // Tambahkan event listener untuk tombol hapus
+                    row.querySelector('.delete-coin').addEventListener('click', () => {
+                        row.remove();
+                        updateSubtotal(-totalValue);
+                    });
                 } catch (error) {
                     alert('Koin tidak ditemukan atau API error');
                 }
